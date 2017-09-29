@@ -39,22 +39,58 @@ namespace MarketAnalyzer.Modules.App.ApiControllers
 
             return stockVm;
         }
-        
+
         [Route("chart")]
-        public async Task<IEnumerable<StockQuoteChartVm>> GetStockChart([FromUri] string ticker, [FromUri] string start, [FromUri] string end)
+        public async Task<IEnumerable<StockQuoteChartVm>> GetStockChart([FromUri] string ticker, [FromUri] string start,
+            [FromUri] string end)
         {
             if (string.IsNullOrWhiteSpace(ticker) || string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))
             {
                 return null;
             }
 
-            var startDate = new DateTime(int.Parse(start.Substring(0, 4)), int.Parse(start.Substring(4, 2)), int.Parse(start.Substring(6, 2)));
-            var endDate = new DateTime(int.Parse(end.Substring(0, 4)), int.Parse(end.Substring(4, 2)), int.Parse(end.Substring(6, 2)));
+            var startDate = new DateTime(int.Parse(start.Substring(0, 4)), int.Parse(start.Substring(4, 2)),
+                int.Parse(start.Substring(6, 2)));
+            var endDate = new DateTime(int.Parse(end.Substring(0, 4)), int.Parse(end.Substring(4, 2)),
+                int.Parse(end.Substring(6, 2)));
 
             ticker = ticker.ToUpperInvariant();
-            var quotes = await Dbcontext.StockQuotes.Where(s=>s.Ticker==ticker && s.Date>=startDate && s.Date<=endDate).Select(s => new {s.Date, s.Close}).ToListAsync();
+            var quotes = await Dbcontext.StockQuotes
+                .Where(s => s.Ticker == ticker && s.Date >= startDate && s.Date <= endDate)
+                .Select(s => new {s.Date, s.Close, s.Open, s.High, s.Low}).OrderBy(d => d.Date).ToListAsync();
 
-            return quotes.Select(s => new StockQuoteChartVm() {Date = s.Date.ToShortDateString(), Close = s.Close});
+            return quotes.Select(s => new StockQuoteChartVm()
+            {
+                Date = s.Date.ToShortDateString(),
+                Close = s.Close,
+                Open = s.Open,
+                Low = s.Low,
+                High = s.High
+            });
+        }
+
+        [Route("chart")]
+        public async Task<IEnumerable<StockQuoteChartVm>> GetStockChart([FromUri] string ticker, [FromUri] int take)
+        {
+            if (string.IsNullOrWhiteSpace(ticker) || take < 0)
+            {
+                return null;
+            }
+
+            ticker = ticker.ToUpperInvariant();
+
+            var quotes = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker).OrderByDescending(d => d.Date)
+                .Take(take).Select(s => new {s.Date, s.Close, s.Open, s.High, s.Low}).OrderBy(d => d.Date)
+                .ToListAsync();
+
+            return quotes.Select(s => new StockQuoteChartVm()
+            {
+                Date = s.Date.ToShortDateString(),
+                Close = s.Close,
+                Open = s.Open,
+                Low = s.Low,
+                High = s.High
+            });
         }
 
         [AllowAnonymous]
@@ -68,7 +104,10 @@ namespace MarketAnalyzer.Modules.App.ApiControllers
     public class StockQuoteChartVm
     {
         public string Date { get; set; }
+        public decimal Open { get; set; }
         public decimal Close { get; set; }
+        public decimal High { get; set; }
+        public decimal Low { get; set; }
     }
 
     public class StockVm

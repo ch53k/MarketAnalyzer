@@ -7,34 +7,56 @@ angular.module('marketAnalyzer').component('stock', {
 
 /* @ngInject */
 function StockController($rootScope, $q, $http, $uibModal, appDataService, appUiService) {
-    
+
     var $ctrl = this;
 
-    //#region Ticker Search
-    var tickerSelected = '';
-    var availableTickers = [];
-    $ctrl.tickerSearch = {
-        dataSource: new DevExpress.data.DataSource({
-            load: function (loadOptions) {
-                var d = new $q.defer();
-                $http.get('api/stocks/tickers').then(function (response) {
-                        availableTickers = response.data;
-                        return d.resolve(response);
-                    },
-                    function (response) {
-                        return $q.reject(response);
+    $ctrl.$onInit = function() {
+    }
+
+    $ctrl.availableTickers = [];
+
+    function loadAvailableTickers() {
+        $http.get('api/stocks/tickers').then(function(response) {
+                $ctrl.availableTickers.length = 0;
+                _.forEach(response.data,
+                    function(value) {
+                        $ctrl.availableTickers.push(value);
                     });
-                return d.promise;
-            }
-        }),
-        placeholder: 'Type A Ticker (MSFT)...',
-        onSelectionChanged: function (data) {
-            tickerSelected = data.selectedItem;
+            },
+            function() {
+            });
+    }
+
+    loadAvailableTickers();
+
+    //#region Ticker Search
+    var tickerSelected = 'MSFT';
+    $ctrl.tickerSearchTicker = '';
+
+    //$ctrl.tickerSearch = {
+    //    bindingOptions: { value: '$ctrl.tickerSearchTicker', dataSource: '$ctrl.availableTickers' },
+    //    placeholder: 'Type a Ticker Symbol (MSFT)...',
+    //    searchMode: 'startswith',
+    //    onEnterKey: function(data) {
+    //        tickerSelected = $ctrl.tickerSearchTicker;
+    //        $ctrl.searchTicker();
+    //    }
+    //}
+
+    $ctrl.tickerSelectBox = {
+        bindingOptions: { value: '$ctrl.tickerSearchTicker', items: '$ctrl.availableTickers' },
+        placeholder: 'Type a Ticker Symbol (MSFT)...',
+        searchMode: 'startswith',
+        searchEnabled: true,
+        acceptCustomValue: true,
+        onEnterKey: function (data) {
+            tickerSelected = $ctrl.tickerSearchTicker;
+            $ctrl.searchTicker();
         }
     }
 
     $ctrl.searchTicker = function() {
-        if (availableTickers.indexOf(tickerSelected.toUpperCase()) > -1) {
+        if ($ctrl.availableTickers.indexOf(tickerSelected.toUpperCase()) > -1) {
             loadTicker();
             return;
         }
@@ -49,38 +71,43 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
             keyboard: false,
             backdrop: 'static',
             resolve: {
-                title: function () {
+                title: function() {
                     return 'Load Stock Data';
                 },
-                message: function () {
+                message: function() {
                     return 'This stock hasn\'t been loaded, would you like to load it?';
                 },
-                okButton: function () {
+                okButton: function() {
                     return 'Yes';
                 },
-                showCancelButton: function () {
+                showCancelButton: function() {
                     return true;
                 }
             }
 
         });
-        
-        modal.result.then(function () {
-            appUiService.showLoadingPanel();
-            appDataService.loadStock(tickerSelected).then(function () {
-                appUiService.hideLoadingPanel();
-                loadTicker();
-            }, function (response) {
-                //TODO: Handel error.
-                appUiService.hideLoadingPanel();
-            });
-        }, function () { });
+
+        modal.result.then(function() {
+                appUiService.showLoadingPanel();
+                appDataService.loadStock(tickerSelected).then(function() {
+                        appUiService.hideLoadingPanel();
+                        loadAvailableTickers();
+                        loadTicker();
+                    },
+                    function(response) {
+                        //TODO: Handel error.
+                        appUiService.hideLoadingPanel();
+                    });
+            },
+            function() {});
     }
 
     function loadTicker() {
         if (tickerSelected.length > 0) {
             refreshChart();
         }
+
+        $ctrl.tickerSearchTicker = '';
     }
     //#endregion
 
@@ -88,16 +115,146 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
     $ctrl.chartTitle = '';
     var chartInstance;
 
+    var chartFilters = {
+        threeDay: { display: '3 Day', startDate: moment().startOf('day').subtract(3, 'd'), key: '3d', chartType: 'candlestick' },
+        fiveDay: { display: '5 Day', startDate: moment().startOf('day').subtract(5, 'd'), key: '5d', chartType: 'candlestick' },
+        month: { display: '1 Month', startDate: moment().startOf('day').subtract(1, 'M'), key: '1m', chartType: 'candlestick' },
+        sixmonth: { display: '6 Month', startDate: moment().startOf('day').subtract(6, 'M'), key: '6m', chartType: 'spline'  },
+        ytd: { display: 'Year To Date', startDate: moment().startOf('year'), key: 'ytd', chartType: 'spline'  },
+        oneYear: { display: '1 Year', startDate: moment().startOf('day').subtract(1, 'y'), key: '1y', chartType: 'spline'  },
+        fiveYear: { display: '5 Year', startDate: moment().startOf('day').subtract(5, 'y'), key: '5y', chartType: 'spline'  },
+        max: { display: 'Max', startDate: moment('1900-01-01'), key: 'max', chartType: 'spline'  },
+        custom: { display: 'Custom', startDate: undefined, key: 'custom', chartType: 'spline'  },
+        findFilter: function(key) {
+            return _.find(chartFilters,
+                function(o) {
+                    return o.key == key;
+                });
+        }
+    };
+
+    var preSetStartDate;
+    var preSetEndDate;
+
+    $ctrl.chartFilter = {
+        preDefined: chartFilters.threeDay.key,
+        startDate: moment().startOf('day').subtract(3, 'd').toDate(),
+        endDate: moment().startOf('day').toDate()
+    };
+    
+
     function refreshChart() {
-        var ds = new DevExpress.data.DataSource({
+        var filter = chartFilters.findFilter($ctrl.chartFilter.preDefined);
+        if (!filter) {
+            return;
+        }
+
+        chartInstance.beginUpdate();
+        if (filter.chartType == 'candlestick' || moment($ctrl.chartFilter.endDate).diff($ctrl.chartFilter.startDate, 'days')<=30) {
+            chartInstance.option('commonSeriesSettings',
+                {
+                    argumentField: 'date',
+                    type: 'candlestick'
+                });
+            chartInstance.option('series',
+                [
+                    {
+                        name: tickerSelected,
+                        openValueField: 'open',
+                        highValueField: 'high',
+                        lowValueField: 'low',
+                        closeValueField: 'close',
+                        reduction: {
+                            color: 'red'
+                        }
+                    }
+                ]);
+            chartInstance.option('tooltip',
+                {
+                    enabled: true,
+                    location: 'edge',
+                    customizeTooltip: function(arg) {
+                        return {
+                            text: 'Date: ' +
+                                arg.argumentText +
+                                '<br/>' +
+                                'Open: $' +
+                                arg.openValue +
+                                '<br/>' +
+                                'Close: $' +
+                                arg.closeValue +
+                                '<br/>' +
+                                'High: $' +
+                                arg.highValue +
+                                '<br/>' +
+                                'Low: $' +
+                                arg.lowValue +
+                                '<br/>'
+                        };
+                    }
+                });
+        }
+        else if (filter.chartType == 'spline') {
+            chartInstance.option('commonSeriesSettings',
+                {
+                    argumentField: 'date',
+                    type: 'spline',
+                    point: { visible: false }
+                });
+            chartInstance.option('series',
+                [
+                    { valueField: 'close', name: tickerSelected }
+                ]);
+            chartInstance.option('tooltip',
+                {
+                    enabled: true,
+                    location: 'edge',
+                    customizeTooltip: function(arg) {
+                        return {
+                            text: 'Date: ' +
+                                arg.argumentText +
+                                '<br/>' +
+                                'Close: $' +
+                                arg.valueText
+                        };
+                    }
+                });
+        }
+        var ds = getNewChartDataSource();
+        chartInstance.showLoadingIndicator();
+        chartInstance.option('dataSource', ds);
+        chartInstance.endUpdate();
+    }
+
+    function getNewChartDataSource() {
+        return new DevExpress.data.DataSource({
             load: function(loadOptions) {
                 var d = new $q.defer();
-                $http.get('api/stocks/chart?ticker=' +
-                    tickerSelected +
-                    '&start=' +
-                    moment().subtract(7, 'd').format('YYYYMMDD')+
-                    '&end=' +
-                    moment().format('YYYYMMDD')).then(function(response) {
+                var url = 'api/stocks/chart?ticker=' + tickerSelected;
+                if ($ctrl.chartFilter.preDefined === chartFilters.fiveDay) {
+                    url = url + '&take=' + 3;
+                } else if ($ctrl.chartFilter.preDefined === chartFilters.fiveDay) {
+                    url = url + '&take=' + 5;
+                } else {
+                    url = url +
+                        '&start=' +
+                        moment($ctrl.chartFilter.startDate).format('YYYYMMDD') +
+                        '&end=' +
+                        moment($ctrl.chartFilter.endDate).format('YYYYMMDD')
+                }
+
+                $http.get(url).then(function(response) {
+                        if ($ctrl.chartFilter.preDefined == chartFilters.threeDay.key ||
+                            $ctrl.chartFilter.preDefined == chartFilters.fiveDay.key ||
+                            $ctrl.chartFilter.preDefined == chartFilters.max.key) {
+                            var minObject = _.minBy(response.data,
+                                function(o) {
+                                    return o.date;
+                                });
+                                preSetStartDate = new Date(minObject.date);
+                            $ctrl.chartFilter.startDate = preSetStartDate;
+                            chartInstance.hideLoadingIndicator();
+                        }
                         return d.resolve(response);
                     },
                     function(response) {
@@ -106,20 +263,25 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
                 return d.promise;
             }
         });
-        chartInstance.option('dataSource', ds);
     }
 
+
     $ctrl.chartOptions = {
+        //dataSource: getNewChartDataSource(),
         bindingOptions: {
-          'title': '$ctrl.chartTitle'  
+            'title': '$ctrl.chartTitle'
         },
-        onInitialized: function (e) {
+        onInitialized: function(e) {
             chartInstance = e.component;
         },
         palette: 'Harmony Light',
+        legend: {
+            itemTextPosition: 'left'
+        },
         commonSeriesSettings: {
             argumentField: 'date',
-            type: 'spline'
+            type: 'spline',
+            point: { visible: false }
         },
         argumentAxis: {
             valueMarginsEnabled: false
@@ -128,33 +290,109 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
             bottom: 20
         },
         series: [
-            { valueField: 'close', name: 'Close' }
+            { valueField: 'close', name: tickerSelected }
         ],
+        valueAxis: {
+            tickInterval: 1,
+            title: {
+                text: 'US dollars'
+            },
+            label: {
+                format: {
+                    type: 'currency',
+                    precision: 0
+                }
+            }
+        },
         "export": {
             enabled: true
         },
-        tooltip:{
+        tooltip: {
             enabled: true
-        },
-        legend: {
-            verticalAlignment: 'bottom',
-            horizontalAlignment: 'center'
         }
     };
     //#endregion
 
-    //#region Chart Filter
-    var chartFilters= {
-        day: '1 Day', 
+    //#region Chart Filter Form
+    var processedChartFilterPreDefined;
+    var isNotCustomerEntry = false;
+    $ctrl.chartFilterForm = {
+        bindingOptions: {
+            formData: '$ctrl.chartFilter'
+        },
+        labelLocation: 'top',
+        colCount: 3,
+        onFieldDataChanged: function(e) {
+            if (e.dataField == 'startDate') {
+                var endDateEditor = $('#chartfilterForm').dxForm('instance').getEditor('endDate');
+                endDateEditor.option('min', e.value);                
+                //if (isNotCustomerEntry){
+                //    isNotCustomerEntry = false;
+                //    return;
+                //}
+                if (preSetStartDate && preSetStartDate != e.value) {
+                    $ctrl.chartFilter.preDefined = 'custom';
+                    loadTicker();
+                }
+                return;
+            }
+            if (e.dataField == 'endDate') {
+                //if (isNotCustomerEntry){
+                //    return;
+                //}
+                if (preSetEndDate && preSetEndDate != e.value) {
+                    $ctrl.chartFilter.preDefined = 'custom';
+                    loadTicker();
+                }
+                return;
+            }
+            if (e.dataField == 'preDefined' && e.value && processedChartFilterPreDefined != e.value) {
+                if (e.value != 'custom') {
+                    var filter = chartFilters.findFilter(e.value);
+                    preSetStartDate = filter.startDate.toDate();
+                    $ctrl.chartFilter.startDate = preSetStartDate;
+                    preSetEndDate = moment().startOf('day').toDate();
+                    $ctrl.chartFilter.endDate = preSetEndDate;
+                    processedChartFilterPreDefined = e.value;
+                    isNotCustomerEntry = true;
+                    loadTicker();
+                }
+            }
+        },
+        items: [
+            {
+                dataField: 'preDefined',
+                editorType: 'dxSelectBox',
+                editorOptions: {
+                    items: [
+                        chartFilters.threeDay, chartFilters.fiveDay, chartFilters.month, chartFilters.sixmonth,
+                        chartFilters.ytd, chartFilters.oneYear, chartFilters.fiveYear, chartFilters.max, chartFilters.custom
+                    ],
+                    displayExpr: 'display',
+                    valueExpr: 'key'
+                }
+            },
+            {
+                dataField: 'startDate',
+                editorType: 'dxDateBox',
+                editorOptions: {
+                    width: '100%'
+                }
+            },
+            {
+                dataField: 'endDate',
+                editorType: 'dxDateBox',
+                editorOptions: {
+                    width: '100%',
+                    max: new Date()
+                }
+            }
+        ]
     }
 
-    $ctrl.chartFilter = {
-        dataSource =
-    }
-    //#endregion
 
     $ctrl.tickerLoad = '';
     $ctrl.tickerEntry = {
-        bindingOptions:{'value': '$ctrl.tickerLoad'}
+        bindingOptions: { 'value': '$ctrl.tickerLoad' }
     }
 }
