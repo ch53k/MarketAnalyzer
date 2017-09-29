@@ -1,0 +1,22 @@
+﻿<div class="page-content">
+    <div class="page-container">
+        <div class="row">
+            <div class="col-md-8">
+                <div dx-autocomplete="$ctrl.tickerSearch"></div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn w-100p" ng-click="$ctrl.searchTicker()">Load Stock</button>
+            </div>
+        </div>
+        <div class="row">
+            <div dx-select-box="$ctrl.chartFilter"></div>
+        </div>
+        <div class="row">
+            <div id="chart" dx-chart="$ctrl.chartOptions"></div>
+        </div>
+        <div class="row">
+            <div dx-text-box="$ctrl.tickerEntry"></div>
+            <button class="btn" ng-click="$ctrl.loadTicker()">Load Stock</button>
+        </div>
+    </div>
+</div>

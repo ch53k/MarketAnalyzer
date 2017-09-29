@@ -1,0 +1,11 @@
+﻿<div class="modal-header bg-primary">
+    <button type="button" class="close" ng-click="$ctrl.buttonCancelClick()"><i class="fa fa-times"></i></button>
+    <h4 class="modal-title">{{ $ctrl.title }}</h4>
+</div>
+<div class="modal-body">
+    <p class="f-16 bold c-primary m-b-0" ng-bind-html="$ctrl.message"></p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-success btn-transparent" ng-click="$ctrl.buttonOkClick()">{{ $ctrl.okButton }}</button>
+    <button type="button" class="btn btn-error btn-transparent" ng-show="$ctrl.showCancelButton" ng-click="$ctrl.buttonCancelClick()">{{ $ctrl.cancelButton }}</button>
+</div>

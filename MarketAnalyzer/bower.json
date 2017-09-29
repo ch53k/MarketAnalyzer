@@ -1,0 +1,22 @@
+{
+  "name": "oalm",
+  "private": true,
+  "dependencies": {
+    "moment": "~2.18",
+    "moment-timezone": "~0.5",
+    "bootstrap" : "~3" 
+  },
+  "devDependencies": {},
+  "overrides": {
+    "moment": {
+      "main": [
+        "min/moment.min.js"
+      ]
+    },
+    "moment-timezone": {
+      "main": [
+        "builds/moment-timezone-with-data-2012-2022.min.js"
+      ]
+    }
+  }
+}
