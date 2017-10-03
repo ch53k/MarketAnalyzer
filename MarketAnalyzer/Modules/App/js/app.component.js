@@ -1,12 +1,12 @@
-angular.module('marketAnalyzer').component('eahcsDpc', {
+angular.module('marketAnalyzer').component('marketAnalyzerApp', {
     templateUrl: 'modules/app/partials/app.partial.html',
-    controller: DPCController,
+    controller: MarketAnalyzerController,
     bindings: {
     }
 });
 
 /* @ngInject */
-function DPCController($rootScope, $routeParams, appDataService, appUiService) {
+function MarketAnalyzerController($rootScope, $routeParams, appDataService, appUiService) {
     
     var $ctrl = this;
     

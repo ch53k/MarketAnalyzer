@@ -1,21 +1,16 @@
 ﻿using System.Web.Http;
 using MarketAnalyzer.Model;
+using MarketAnalyzer.Modules.App.Repository;
 
 namespace MarketAnalyzer.Shared
 {
     public class AnalyzerControllerBase : ApiController
     {
-        protected readonly AnalyzerDbContext Dbcontext;
+        protected readonly StockRepository Repository;
 
-        public AnalyzerControllerBase()
+        public AnalyzerControllerBase(StockRepository repository)
         {
-            Dbcontext = new AnalyzerDbContext("DefaultConnection");
-            Dbcontext.Database.Initialize(true);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            Dbcontext.Dispose();
+            Repository = repository;
         }
     }
 }

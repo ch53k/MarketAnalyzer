@@ -4,18 +4,30 @@
   "dependencies": {
     "moment": "~2.18",
     "moment-timezone": "~0.5",
-    "bootstrap" : "~3" 
+    "bootstrap": "~3",
+    "lodash": "4.17.4",
+    "devextreme": "17.1.*"
   },
   "devDependencies": {},
   "overrides": {
     "moment": {
       "main": [
-        "min/moment.min.js"
+        "moment.js"
       ]
     },
     "moment-timezone": {
       "main": [
-        "builds/moment-timezone-with-data-2012-2022.min.js"
+        "builds/moment-timezone-with-data.js"
+      ]
+    },
+    "lodash": {
+      "main": [
+        "dist/lodash.js"
+      ]
+    },
+    "devextreme": {
+      "main": [
+        "js/dx.all.debug.js"
       ]
     }
   }

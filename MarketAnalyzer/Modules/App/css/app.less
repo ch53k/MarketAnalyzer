@@ -30,6 +30,8 @@ body {
 
 .header .header-container {
     /*width: 350px;*/
+    font-size: 60px;
+    color: @header-h1-color;
     text-align: center;
     margin: 0 auto;
 }
@@ -424,4 +426,32 @@ footer img {
 
 .w-100p{
     width: 100%
+}
+
+
+.stock-stats {
+    font-size: 36px;
+
+    .price-difference{
+        font-size: 18px;
+    } 
+
+    .fifty-two-week{
+        font-size: 14px;
+    } 
+    .negative-price{
+        color: red;
+    }
+}
+
+.error-message {
+    font-size: 18px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.modal-zindex {
+    z-index: 9999 !important;
 }

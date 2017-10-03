@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "StockQuoteKey": "HYOKWTUL6WHOPYAL",
+    "DefaultConnection": "Server=(localdb)\mssqllocaldb;Database=DEMO_StockAnalyzer;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}

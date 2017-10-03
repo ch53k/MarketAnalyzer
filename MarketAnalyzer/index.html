@@ -3,21 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title ng-bind="$root.title">EAHCS DPC Webinars</title>
+    <title ng-bind="$root.title">Market Analyzer</title>
 
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/lib/images/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/lib/images/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/lib/images/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/lib/images/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/lib/images/apple-touch-icon-60x60.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/lib/images/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/lib/images/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/lib/images/apple-touch-icon-152x152.png" />
-    <link rel="icon" type="image/png" href="/lib/images/favicon-196x196.png" sizes="196x196" />
-    <link rel="icon" type="image/png" href="/lib/images/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/png" href="/lib/images/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="/lib/images/favicon-16x16.png" sizes="16x16" />
-    <link rel="icon" type="image/png" href="/lib/images/favicon-128.png" sizes="128x128" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/lib/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/lib/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/lib/images/favicon-16x16.png">
+    <link rel="manifest" href="/lib/images/manifest.json">
+    <link rel="mask-icon" href="/lib/images/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/lib/images/favicon.ico">
+    <meta name="msapplication-config" content="/lib/images/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
     <link href="//cdn3.devexpress.com/jslib/17.1.6/css/dx.common.css" rel="stylesheet">
@@ -30,31 +25,32 @@
 <body>
 <div class="header clearfix">
     <div class="header-container">
-        <a href="https://www.eahcs.com" target="_blank"><img src="/lib/images/EAHCS_logo.png" alt="Employer Advantage Health Care Solutions - EAHCS.com" /></a>
         <div class="title">
-            <h1>Engaging Employers to Grow Your DPC Practice</h1>
-            <h2>FREE webinar series to help your DPC practice</h2>
+            <div><i class="fa fa-line-chart" aria-hidden="true"></i> Market Analyzer</div>
         </div>
     </div>
 </div>
-<eahcs-dpc></eahcs-dpc>
+<market-analyzer-app></market-analyzer-app>
 <footer>
     <div>
-        &copy;2017 Employer Advantage Health Care Solutions, LLC. All rights reserved. Confidential.<br/><a style="padding-right: 55px" target="_blank" href="https://id.eahcs.com/#/privacy">Privacy Policy</a><a target="_blank" href="https://id.eahcs.com/#/terms">Terms And Conditions</a>
+        &copy;<script type="text/javascript">
+                  document.write(new Date().getFullYear());
+              </script> Robert Hunt Anstett. All rights reserved. Confidential.<br/>
     </div>
 </footer>
 
-<script src="//code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/d5cdd9957a.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js" integrity="sha256-8E6QUcFg1KTnpEU8TFGhpTGHw5fJqB9vCms3OhAYLqw=" crossorigin="anonymous"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.8/angular-sanitize.min.js" integrity="sha256-ofQzChnxWn2oMUL1tJeGxH4WabrFcHbgIecUgUpTI48=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-animate.min.js" integrity="sha256-QbW7ReHd+kSZ+oECLxJqwMAEfSS7nQFBlF76hdWOTBA=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js" integrity="sha256-tyfWW2LtJQNI+l3F0h6xDV/ij6Mfn8lwSKHWOsmEgXM=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.1.6/js/dx.viz-web.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="lib/js/moment.min.js"></script>
-<script src="lib/js/moment-timezone-with-data-2012-2022.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js" integrity="sha256-+5qLxtbk4c2md6Wr70zMmahTHwH+CoFueQVQcRRSusg=" crossorigin="anonymous"></script>
 
 <script src="Modules/App/js/app.module.js"></script>
 <script src="Modules/App/js/services/app.data.service.js"></script>

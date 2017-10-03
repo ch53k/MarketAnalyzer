@@ -89,6 +89,39 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.Configuration, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.1.1.2\lib\netstandard1.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Binder.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.FileExtensions.1.1.2\lib\net451\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Json.1.1.2\lib\net451\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.1.1\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Physical.1.1.1\lib\net451\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileSystemGlobbing.1.1.1\lib\net45\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.1.1.1\lib\netstandard1.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -98,10 +131,25 @@
     <Reference Include="SendGrid, Version=9.8.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>..\packages\Sendgrid.9.9.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.TypeConverter.4.3.0\lib\net45\System.ComponentModel.TypeConverter.dll</HintPath>
+    </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net45\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.3.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -152,23 +200,28 @@
     <Content Include="Global.asax" />
     <None Include="gulpfile.js" />
     <None Include="index.template.html" />
-    <None Include="connectionStrings.template.config" />
     <None Include="Modules\App\css\app.less" />
     <Content Include="lib\css\marketAnalyzer.css" />
+    <None Include="lib\js\bootstrap.js" />
+    <None Include="lib\js\jquery.js" />
+    <None Include="lib\js\lodash.js" />
+    <None Include="lib\js\moment-timezone-with-data.js" />
+    <None Include="lib\js\moment.js" />
+    <None Include="lib\js\dx.all.debug.js" />
+    <None Include="lib\js\globalize.min.js" />
+    <None Include="lib\js\jszip.js" />
+    <None Include="lib\js\node-main.js" />
+    <None Include="lib\js\node_main.js" />
     <Content Include="Modules\App\images\EAHCS_logo.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-114x114.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-120x120.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-144x144.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-152x152.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-57x57.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-60x60.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-72x72.png" />
-    <Content Include="Modules\App\images\favicons\apple-touch-icon-76x76.png" />
-    <Content Include="Modules\App\images\favicons\favicon-128.png" />
+    <Content Include="Modules\App\images\favicons\android-chrome-192x192.png" />
+    <Content Include="Modules\App\images\favicons\android-chrome-256x256.png" />
+    <Content Include="Modules\App\images\favicons\apple-touch-icon.png" />
+    <Content Include="Modules\App\images\favicons\browserconfig.xml" />
     <Content Include="Modules\App\images\favicons\favicon-16x16.png" />
-    <Content Include="Modules\App\images\favicons\favicon-196x196.png" />
     <Content Include="Modules\App\images\favicons\favicon-32x32.png" />
-    <Content Include="Modules\App\images\favicons\favicon-96x96.png" />
+    <Content Include="Modules\App\images\favicons\favicon.ico" />
+    <Content Include="Modules\App\images\favicons\mstile-150x150.png" />
+    <Content Include="Modules\App\images\favicons\safari-pinned-tab.svg" />
     <Content Include="Modules\App\js\app.component.js" />
     <Content Include="Modules\App\js\app.messageBox.component.js" />
     <Content Include="Modules\App\js\app.module.js" />
@@ -181,6 +234,15 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\App\Repository\StockRepository.cs" />
+    <Compile Include="Shared\DepedencyInjection\DependencyResolver.cs" />
+    <Compile Include="Shared\DepedencyInjection\DependencyScope.cs" />
+    <Compile Include="Shared\DepedencyInjection\ITypeActivatorCache.cs" />
+    <Compile Include="Shared\DepedencyInjection\AnalyzerHttpControllerActivator.cs" />
+    <Compile Include="Shared\DepedencyInjection\AnalyzerTypeActivatorCache.cs" />
+    <Compile Include="Shared\Stocks\IStockLoader.cs" />
+    <Compile Include="Shared\Stocks\StockProcessor.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Migrations\201709281118233_v1.cs" />
     <Compile Include="Migrations\201709281118233_v1.Designer.cs">
@@ -196,15 +258,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Globals.cs" />
+    <Compile Include="Shared\ConnectionStrings.cs" />
     <Compile Include="Model\AnalyzerDbContext.cs" />
     <Compile Include="Model\Stock.cs" />
     <Compile Include="Model\StockQuote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\AnalyzerResult.cs" />
-    <Compile Include="Shared\StockLoader.cs" />
+    <Compile Include="Shared\Stocks\StockLoaderAlphAvantage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Modules\App\images\favicons\manifest.json" />
     <None Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

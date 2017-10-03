@@ -1,15 +1,24 @@
 ﻿<div class="page-content">
     <div class="page-container">
+        <div class="bg-danger error-message" ng-if="$ctrl.errageMessage">{{$ctrl.errageMessage}}</div>
         <div class="row">
             <div class="col-md-8">
-                <!--<div dx-autocomplete="$ctrl.tickerSearch"></div>-->
                 <div dx-select-box="$ctrl.tickerSelectBox"></div>
             </div>
             <div class="col-md-4">
                 <button class="btn w-100p" ng-click="$ctrl.searchTicker()">Load Stock</button>
             </div>
         </div>
+        <div class="row stock-stats">
+            <span class="f-16">{{$ctrl.activeStock.ticker}}</span>
+            <span> {{$ctrl.activeStock.close|currency : $}}</span>
+            <i class="price-difference fa" ng-class="[{'fa-arrow-down negative-price': ($ctrl.activeStock.close- $ctrl.activeStock.open)<0}, {'fa-arrow-up': ($ctrl.activeStock.close- $ctrl.activeStock.open)>=0}]" aria-hidden="true"></i><span class="price-difference" ng-class="{'negative-price': ($ctrl.activeStock.close- $ctrl.activeStock.open)<0}"> {{$ctrl.activeStock.close -$ctrl.activeStock.open | currency : $}}</span>
+            <span class="fifty-two-week"> <strong>{{$ctrl.activeStock.maxDate|date:'shortDate'}}:</strong> Open: {{$ctrl.activeStock.open|currency:$}}</span>
+            <span class="fifty-two-week"> <strong>52 Week:</strong> High: {{$ctrl.activeStock.fiftyTwoWeekHigh |currency:$}} Low:{{$ctrl.activeStock.fiftyTwoWeekLow |currency:$}}</span>
+        </div>
+        <div class="row">
             <div id="chartfilterForm" dx-form="$ctrl.chartFilterForm"></div>
+        </div>
         <div class="row">
             <div id="chart" dx-chart="$ctrl.chartOptions"></div>
         </div>

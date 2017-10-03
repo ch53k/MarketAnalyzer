@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Web.Http;
 using MarketAnalyzer.Model;
+using MarketAnalyzer.Shared.DepedencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -11,6 +11,9 @@ namespace MarketAnalyzer
     {
         protected void Application_Start()
         {
+            var confiuration = Startup.ConfigureOptions();
+            var serviceProvider = Startup.ConfigureServices(confiuration);
+
             GlobalConfiguration.Configure(config =>
             {
                 config.MapHttpAttributeRoutes();
@@ -24,10 +27,9 @@ namespace MarketAnalyzer
                 var jsonSettings = config.Formatters.JsonFormatter.SerializerSettings;
                 jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); //Use camel case.
                 jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; //Prevent self reference loop issues when serializing entity objects.
-            });
 
-            //GlobalConfiguration.Configure(WebApiConfig.Register);
-            Globals.StockQuoteKey = ConfigurationManager.ConnectionStrings["StockQuotes"].ConnectionString;
+                config.DependencyResolver = new DependencyResolver(serviceProvider);
+            });
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<AnalyzerDbContext, Migrations.Configuration>());
         }
