@@ -25,13 +25,13 @@ namespace MarketAnalyzer
         {
             var services = new ServiceCollection();
             services.AddSingleton(provider => configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>());
-            services.AddSingleton<IStockLoader, StockLoaderAlphAvantage>();
+            services.AddSingleton<IStockLoader, StockLoaderAlphaVantage>();
 
             services.AddSingleton<ITypeActivatorCache, AnalyzerTypeActivatorCache>();
             services.AddTransient<IHttpControllerActivator, AnalyzerHttpControllerActivator>();
 
             services.AddScoped<AnalyzerDbContext>();
-            services.AddScoped<StockProcessor>();
+            services.AddScoped<IStockProcessor, StockProcessor>();
             services.AddScoped<StockRepository>();
             return services.BuildServiceProvider();
         }

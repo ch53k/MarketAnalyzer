@@ -16,13 +16,12 @@ namespace MarketAnalyzer.Model
             
         }
 #endif
-        public DbSet<Stock> Stocks { get; set; }
-        public DbSet<StockQuote> StockQuotes { get; set; }
+        public virtual DbSet<Stock> Stocks { get; set; }
+        public virtual DbSet<StockQuote> StockQuotes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Stock>().HasMany(s=>s.Quotes).WithRequired(s=>s.Stock).HasForeignKey(s=>s.Ticker).WillCascadeOnDelete(false);
-
         }
     }
 }

@@ -241,6 +241,7 @@
     <Compile Include="Shared\DepedencyInjection\AnalyzerHttpControllerActivator.cs" />
     <Compile Include="Shared\DepedencyInjection\AnalyzerTypeActivatorCache.cs" />
     <Compile Include="Shared\Stocks\IStockLoader.cs" />
+    <Compile Include="Shared\Stocks\IStockProcessor.cs" />
     <Compile Include="Shared\Stocks\StockProcessor.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />

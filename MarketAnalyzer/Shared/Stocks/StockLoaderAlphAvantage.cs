@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MarketAnalyzer.Model;
@@ -8,21 +7,17 @@ using Newtonsoft.Json.Linq;
 
 namespace MarketAnalyzer.Shared.Stocks
 {
-    public class StockLoaderAlphAvantage : IStockLoader
+    public class StockLoaderAlphaVantage : IStockLoader
     {
         private readonly string _stockConnectionString;
 
-        public StockLoaderAlphAvantage(ConnectionStrings connectionStrings)
+        public StockLoaderAlphaVantage(ConnectionStrings connectionStrings)
         {
             _stockConnectionString = connectionStrings.StockQuoteKey;
         }
 
-        public async Task<IEnumerable<StockQuote>> LoadAsync(string ticker, string outputsize)
+        protected virtual async Task<string> GetAsync(string ticker, string outputSize)
         {
-            ticker = ticker.ToUpperInvariant();
-
-            var stockQuotes = new List<StockQuote>();
-
             string quotesSerialized;
             var retryCount = 0;
             while (true)
@@ -30,7 +25,7 @@ namespace MarketAnalyzer.Shared.Stocks
                 using (var httpClient = new HttpClient())
                 {
                     var result = await httpClient.GetAsync(
-                        $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&outputsize={outputsize}&apikey={_stockConnectionString}");
+                        $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&outputsize={outputSize}&apikey={_stockConnectionString}");
                     if (result.IsSuccessStatusCode)
                     {
                         quotesSerialized = await result.Content.ReadAsStringAsync();
@@ -40,9 +35,20 @@ namespace MarketAnalyzer.Shared.Stocks
                 }
                 if (retryCount == 2)
                 {
-                    throw  new Exception("Unable to get quotes from remote service.");
+                    throw new Exception("Unable to get quotes from remote service.");
                 }
             }
+            return quotesSerialized;
+        }
+
+        public async Task<IEnumerable<StockQuote>> LoadAsync(string ticker, string outputSize)
+        {
+            ticker = ticker.ToUpperInvariant();
+
+            var stockQuotes = new List<StockQuote>();
+
+            string quotesSerialized = await GetAsync(ticker, outputSize);
+            
             var o = JObject.Parse(quotesSerialized);
             var metaData = o.First;
             var timeSeries = metaData.Next;

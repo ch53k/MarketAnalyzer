@@ -6,6 +6,6 @@ namespace MarketAnalyzer.Shared.Stocks
 {
     public interface IStockLoader
     {
-        Task<IEnumerable<StockQuote>> LoadAsync(string ticker, string outputsize);
+        Task<IEnumerable<StockQuote>> LoadAsync(string ticker, string outputSize);
     }
 }

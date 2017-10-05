@@ -11,23 +11,22 @@ namespace MarketAnalyzer.Modules.App.Repository
 {
     public class StockRepository :IDisposable
     {
-        private readonly StockProcessor _stockLoader;
-        protected readonly AnalyzerDbContext Dbcontext;
-        public StockRepository(AnalyzerDbContext dbContext, StockProcessor stockLoader)
+        private readonly IStockProcessor _stockLoader;
+        protected readonly AnalyzerDbContext DbContext;
+        public StockRepository(AnalyzerDbContext dbContext, IStockProcessor stockLoader)
         {
-            Dbcontext = dbContext;
+            DbContext = dbContext;
             _stockLoader = stockLoader;
-            Dbcontext.Database.Initialize(true);
         }
 
         public void Dispose()
         {
-            Dbcontext?.Dispose();
+            DbContext?.Dispose();
         }
 
         public async Task<IEnumerable<string>> GetTickersAsync()
         {
-            return await Dbcontext.Stocks.Select(s => s.Id).ToListAsync();
+            return await DbContext.Stocks.Select(s => s.Id).ToListAsync();
         }
 
         public async Task<StockWithChartVm> GetChartAsync(string ticker, string start, string end)
@@ -41,9 +40,14 @@ namespace MarketAnalyzer.Modules.App.Repository
             var startDate = new DateTime(int.Parse(start.Substring(0, 4)), int.Parse(start.Substring(4, 2)),int.Parse(start.Substring(6, 2)));
             var endDate = new DateTime(int.Parse(end.Substring(0, 4)), int.Parse(end.Substring(4, 2)),int.Parse(end.Substring(6, 2)));
 
-            var quotes = await Dbcontext.StockQuotes
+            var quotes = await DbContext.StockQuotes
                 .Where(s => s.Ticker == ticker && s.Date >= startDate && s.Date <= endDate)
                 .Select(s => new { s.Date, s.Close, s.Open, s.High, s.Low }).OrderBy(d => d.Date).ToListAsync();
+
+            if (!quotes.Any())
+            {
+                return null;
+            }
 
             var stockQuoteVm = await GetStockInternalAsync(ticker);
             stockQuoteVm.ChartQuotes = quotes.Select(s => new StockQuoteChartVm()
@@ -59,14 +63,20 @@ namespace MarketAnalyzer.Modules.App.Repository
 
         public async Task<StockWithChartVm> GetChartAsync(string ticker, int take)
         {
+            ticker = ticker.ToUpperInvariant();
             if (!(await _stockLoader.LoadCompactAsync(ticker)).Succeeded)
             {
                 return null;
             }
 
-            var quotes = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker).OrderByDescending(d => d.Date)
+            var quotes = await DbContext.StockQuotes.Where(s => s.Ticker == ticker).OrderByDescending(d => d.Date)
                 .Take(take).Select(s => new { s.Date, s.Close, s.Open, s.High, s.Low }).OrderBy(d => d.Date)
                 .ToListAsync();
+
+            if (!quotes.Any())
+            {
+                return null;
+            }
 
             var stockQuoteVm = await GetStockInternalAsync(ticker);
             stockQuoteVm.ChartQuotes = quotes.Select(s => new StockQuoteChartVm()
@@ -83,19 +93,29 @@ namespace MarketAnalyzer.Modules.App.Repository
         private async Task<StockWithChartVm> GetStockInternalAsync(string ticker)
         {
             ticker = ticker.ToUpperInvariant();
-            var stockVm = await Dbcontext.Stocks.Select(s => new StockWithChartVm() { Ticker = s.Id, MinDate = s.MinDate, MaxDate = s.MaxDate }).FirstOrDefaultAsync(s => s.Ticker == ticker);
-            var openClose = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker).Select(s => new { s.Close, s.Open, s.Date }).OrderByDescending(s => s.Date).FirstOrDefaultAsync();
+            var stockVm = await DbContext.Stocks.Select(s => new StockWithChartVm() { Ticker = s.Id, MinDate = s.MinDate, MaxDate = s.MaxDate }).FirstOrDefaultAsync(s => s.Ticker == ticker);
+            if (stockVm == null)
+            {
+                return null;
+            }
+
+            var openClose = await DbContext.StockQuotes.Where(s => s.Ticker == ticker).Select(s => new { s.Close, s.Open, s.Date }).OrderByDescending(s => s.Date).FirstOrDefaultAsync();
             stockVm.Open = openClose.Open;
             stockVm.Close = openClose.Close;
 
-            stockVm.AllTimeHigh = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker).MaxAsync(s => s.High);
-            stockVm.AllTimeLow = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker).MinAsync(s => s.Low);
+            stockVm.AllTimeHigh = await DbContext.StockQuotes.Where(s => s.Ticker == ticker).MaxAsync(s => s.High);
+            stockVm.AllTimeLow = await DbContext.StockQuotes.Where(s => s.Ticker == ticker).MinAsync(s => s.Low);
 
             var fiftyTwoWeekAgo = DateTime.Today.AddYears(-1);
-            stockVm.FiftyTwoWeekHigh = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker && s.Date >= fiftyTwoWeekAgo).MaxAsync(s => s.High);
-            stockVm.FiftyTwoWeekLow = await Dbcontext.StockQuotes.Where(s => s.Ticker == ticker && s.Date >= fiftyTwoWeekAgo).MinAsync(s => s.Low);
+            stockVm.FiftyTwoWeekHigh = await DbContext.StockQuotes.Where(s => s.Ticker == ticker && s.Date >= fiftyTwoWeekAgo).MaxAsync(s => s.High);
+            stockVm.FiftyTwoWeekLow = await DbContext.StockQuotes.Where(s => s.Ticker == ticker && s.Date >= fiftyTwoWeekAgo).MinAsync(s => s.Low);
 
             return stockVm;
+        }
+
+        public async Task<StockVm> GetStockAsync(string ticker)
+        {
+            return await GetStockInternalAsync(ticker);
         }
 
         public async Task<AnalyzerResult> LoadStockAsync(string ticker)

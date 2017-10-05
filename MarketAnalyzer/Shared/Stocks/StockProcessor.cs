@@ -6,12 +6,12 @@ using MarketAnalyzer.Model;
 
 namespace MarketAnalyzer.Shared.Stocks
 {
-    public class StockProcessor
+    public class StockProcessor : IStockProcessor
     {
         private readonly AnalyzerDbContext _dbContext;
         private readonly IStockLoader _loader;
 
-        protected bool IsMarketClosed
+        protected virtual bool IsMarketClosed
         {
             get
             {
@@ -27,24 +27,24 @@ namespace MarketAnalyzer.Shared.Stocks
             _dbContext = dbContext;
             _loader = loader;
         }
-        public async Task<AnalyzerResult> LoadCompactAsync(string ticker)
+        public virtual async Task<AnalyzerResult> LoadCompactAsync(string ticker)
         {
             return await LoadAsync(ticker, "compact");
         }
 
-        public async Task<AnalyzerResult> LoadFullAsync(string ticker)
+        public virtual async Task<AnalyzerResult> LoadFullAsync(string ticker)
         {
             return await LoadAsync(ticker, "full");
         }
 
-        protected async Task<AnalyzerResult> LoadAsync(string ticker, string ouputSize)
+        protected async Task<AnalyzerResult> LoadAsync(string ticker, string outputSize)
         {
             ticker = ticker.ToUpperInvariant();
 
 
             var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == ticker);
-            
-            var intialStockLoad = false;
+            var test = _dbContext.Stocks.ToList();
+            var initialStockLoad = false;
             if (stock == null)
             {
                 stock = _dbContext.Stocks.Add(new Stock()
@@ -53,7 +53,7 @@ namespace MarketAnalyzer.Shared.Stocks
                     MinDate = DateTime.MaxValue,
                     MaxDate = DateTime.MinValue
                 });
-                intialStockLoad = true;
+                initialStockLoad = true;
             }
             if (stock.MaxDate == DateTime.Today.AddDays(-1) && !IsMarketClosed)
             {
@@ -62,8 +62,8 @@ namespace MarketAnalyzer.Shared.Stocks
 
             try
             {
-                var quotes = await _loader.LoadAsync(ticker, ouputSize);
-                foreach (var quote in quotes.OrderBy(s=>s.Date).Where(q=>intialStockLoad || q.Date<stock.MinDate || q.Date.Date>stock.MaxDate.Date))
+                var quotes = await _loader.LoadAsync(ticker, outputSize);
+                foreach (var quote in quotes.OrderBy(s=>s.Date).Where(q=> initialStockLoad || q.Date<stock.MinDate || q.Date.Date>stock.MaxDate.Date))
                 {
                     if (quote.Date == DateTime.Today && !IsMarketClosed)
                     {
