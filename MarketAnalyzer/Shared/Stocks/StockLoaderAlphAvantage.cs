@@ -52,6 +52,10 @@ namespace MarketAnalyzer.Shared.Stocks
             var o = JObject.Parse(quotesSerialized);
             var metaData = o.First;
             var timeSeries = metaData.Next;
+            if (timeSeries == null)
+            {
+                throw new Exception($"Ticker {ticker} returned 0 quotes.");
+            }
             var day = timeSeries.First;
 
             foreach (var child in day.Children())

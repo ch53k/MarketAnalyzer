@@ -13,7 +13,7 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
     $ctrl.$onInit = function() {
     }
 
-    $ctrl.errageMessage = '';
+    $ctrl.errorMessage = '';
 
     var activeTicker = 'MSFT';
     $ctrl.activeStock = {};
@@ -23,7 +23,8 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
     loadAvailableTickers();
 
     function loadAvailableTickers() {
-        $http.get('api/stocks/tickers').then(function(response) {
+        $http.get('api/stocks/tickers').then(function (response) {
+                $ctrl.errorMessage = undefined;
                 $ctrl.availableTickers.length = 0;
                 _.forEach(response.data,
                     function(value) {
@@ -86,13 +87,15 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
 
         modal.result.then(function() {
                 appUiService.showLoadingPanel();
-                appDataService.loadStock(activeTicker).then(function() {
+                appDataService.loadStock(activeTicker).then(function () {
+                        $ctrl.errorMessage = undefined;
                         appUiService.hideLoadingPanel();
                         loadAvailableTickers();
                         loadTicker();
                     },
                     function(response) {
-                        $ctrl.errageMessage = response.data.message;
+                        $ctrl.errorMessage = response.data.message;
+                        $ctrl.tickerSelectBoxValue = null;
                         appUiService.hideLoadingPanel();
                     });
             },
@@ -270,7 +273,8 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
                         moment($ctrl.chartFilter.endDate).format('YYYYMMDD');
                 }
 
-                $http.get(url).then(function(response) {
+                $http.get(url).then(function (response) {
+                        $ctrl.errorMessage = undefined;
                         if ($ctrl.chartFilter.preDefined == chartFilters.threeDay.key ||
                             $ctrl.chartFilter.preDefined == chartFilters.fiveDay.key ||
                             $ctrl.chartFilter.preDefined == chartFilters.max.key) {
@@ -286,7 +290,7 @@ function StockController($rootScope, $q, $http, $uibModal, appDataService, appUi
                         return d.resolve(response.data.chartQuotes);
                     },
                     function (response) {
-                        $ctrl.errageMessage = response.data;
+                        $ctrl.errorMessage = response.data;
                         return $q.reject(response);
                     });
                 return d.promise;
