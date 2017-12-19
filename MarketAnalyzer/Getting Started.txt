@@ -1,0 +1,7 @@
+﻿Requirements:
+	Visual Studio
+	.Net 4.6.1
+	Node JS, NPM https://nodejs.org/en/
+	Gulp installed globally so MSBUILD can access it https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
+	LocalDB (if you want to use a different SQL Server you must change the connection string)
+

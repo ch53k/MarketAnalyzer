@@ -11,7 +11,7 @@ namespace MarketAnalyzer.Shared.Stocks
     {
         private readonly string _stockConnectionString;
 
-        public StockLoaderAlphaVantage(ConnectionStrings connectionStrings)
+        public StockLoaderAlphaVantage(ConnectionStringOptions connectionStrings)
         {
             _stockConnectionString = connectionStrings.StockQuoteKey;
         }

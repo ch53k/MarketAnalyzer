@@ -5,7 +5,7 @@ namespace MarketAnalyzer.Model
 {
     public class AnalyzerDbContext : DbContext
     {
-        public AnalyzerDbContext(string connectionName) : base(connectionName)
+        public AnalyzerDbContext(ConnectionStringOptions connectionStringOptions) : base(connectionStringOptions.DefaultConnection)
         {
             
         }

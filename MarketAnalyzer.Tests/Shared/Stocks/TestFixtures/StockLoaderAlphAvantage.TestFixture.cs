@@ -7,7 +7,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks.TestFixtures
 {
     public class StockLoaderAlphaVantageTestFixture : StockLoaderAlphaVantage
     {
-        public StockLoaderAlphaVantageTestFixture() : base(new ConnectionStrings())
+        public StockLoaderAlphaVantageTestFixture() : base(new ConnectionStringOptions())
         {
         }
 

@@ -24,7 +24,7 @@ namespace MarketAnalyzer
         public static IServiceProvider ConfigureServices(IConfiguration configuration)
         {
             var services = new ServiceCollection();
-            services.AddSingleton(provider => configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>());
+            services.AddSingleton(provider => configuration.GetSection("ConnectionStrings").Get<ConnectionStringOptions>());
             services.AddSingleton<IStockLoader, StockLoaderAlphaVantage>();
 
             services.AddSingleton<ITypeActivatorCache, AnalyzerTypeActivatorCache>();
