@@ -26,7 +26,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks
             mockDbContext.Setup(s => s.Stocks).Returns(mockStockDataSet.Object);
 
             var stockLoader = new StockLoaderTestFixture();
-            var processor = new StockProcessor(mockDbContext.Object, stockLoader);
+            var processor = new StockProcessorTestFixture(mockDbContext, stockLoader) { IsMarketClosedValue = true };
 
             var stockQuoteDataFixture = new StockQuoteDataFixture();
             var ticker = "goog";
@@ -62,7 +62,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks
 
 
             var stockLoader = new StockLoaderTestFixture();
-            var processor = new StockProcessor(mockDbContext.Object, stockLoader);
+            var processor = new StockProcessorTestFixture(mockDbContext, stockLoader) { IsMarketClosedValue = true };
 
 
             stockLoader.Quotes = stockDataFixture.QuoteDataFixture.Entities.Where(s=>s.Ticker==ticker).ToList();
@@ -91,7 +91,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks
             mockDbContext.Setup(s => s.Stocks).Returns(mockStockDataSet.Object);
 
             var stockLoader = new StockLoaderTestFixture();
-            var processor = new StockProcessor(mockDbContext.Object, stockLoader);
+            var processor = new StockProcessorTestFixture(mockDbContext, stockLoader) { IsMarketClosedValue = true };
 
             var stockQuoteDataFixture = new StockQuoteDataFixture();
             var ticker = "goog";
@@ -101,7 +101,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks
             stockLoader.Quotes = stockQuoteDataFixture.Entities.Where(s=>s.Ticker==ticker).ToList();
             var result = await processor.LoadCompactAsync(ticker);
 
-            mockStockQuoteDataSet.Verify(s=>s.Add(It.IsAny<StockQuote>()), Times.Exactly(10));
+            mockStockQuoteDataSet.Verify(s => s.Add(It.IsAny<StockQuote>()), Times.Exactly(stockLoader.Quotes.Count()));
             mockStockDataSet.Verify(s => s.Add(It.IsAny<Stock>()), Times.Once);
             mockDbContext.Verify(s=>s.SaveChangesAsync(), Times.Once);
             Assert.IsTrue(result.Succeeded);
@@ -127,7 +127,7 @@ namespace MarketAnalyzer.Tests.Shared.Stocks
 
 
             var stockLoader = new StockLoaderTestFixture();
-            var processor = new StockProcessor(mockDbContext.Object, stockLoader);
+            var processor = new StockProcessorTestFixture(mockDbContext, stockLoader) { IsMarketClosedValue = true };
 
 
             stockLoader.Quotes = stockDataFixture.QuoteDataFixture.Entities.Where(s=>s.Ticker==ticker).ToList();

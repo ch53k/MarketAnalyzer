@@ -43,7 +43,6 @@ namespace MarketAnalyzer.Shared.Stocks
 
 
             var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == ticker);
-            var test = _dbContext.Stocks.ToList();
             var initialStockLoad = false;
             if (stock == null)
             {
@@ -60,6 +59,7 @@ namespace MarketAnalyzer.Shared.Stocks
                 return AnalyzerResult.Sucess();
             }
 
+            var test = 0;
             try
             {
                 var quotes = await _loader.LoadAsync(ticker, outputSize);
@@ -71,6 +71,7 @@ namespace MarketAnalyzer.Shared.Stocks
                     }
 
                     _dbContext.StockQuotes.Add(quote);
+                    test++;
 
                     stock.MinDate = stock.MinDate > quote.Date ? quote.Date : stock.MinDate;
                     stock.MaxDate = stock.MaxDate < quote.Date ? quote.Date : stock.MaxDate;

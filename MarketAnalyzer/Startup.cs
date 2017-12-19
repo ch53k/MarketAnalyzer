@@ -17,7 +17,7 @@ namespace MarketAnalyzer
             var executionDirectoryInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
             var builder = new ConfigurationBuilder();
             builder.SetBasePath(Path.Combine(executionDirectoryInfo?.FullName ?? "", "Config"));
-            builder.AddJsonFile("settings.debug.json", true);
+            builder.AddJsonFile("settings.debug.json", false);
             return builder.Build();
         }
 
